@@ -1,7 +1,9 @@
 /**
  * @file 
- * @brief 
+ * @brief Programa 2 - Imprime el mismo mensaje mediante el llamado al sistema con write(2) y el uso de
+ *        printf de la libreria de C.
  * @author Juan Jose Rodriguez Prada <juanrodriguezkq@unicauca.edu.co>
+ * @author Sebastian Tintinago Pantoja <sebastiantintinago@unicauca.edu.co>
  */
 
 #include <stdio.h>
@@ -11,12 +13,11 @@
 
 int main(int argc, char * argv[])
 {
-    char mensaje1[50] = "PRINTF: Este mensaje se debe repetir!";
-    char mensaje2[50] = "WRITE: Este mensaje se debe repetir!";
+    char mensaje[] = "Este mensaje se debe repetir!";
 
-    printf("%s", mensaje1);
+    printf("%s", mensaje);
 
-    if(write(STDOUT_FILENO, mensaje2, strlen(mensaje2)) == -1) 
+    if(write(STDOUT_FILENO, mensaje, sizeof(mensaje)) == -1) 
     { 
         perror("Ocurrio un error al usar la funcion WRITE.\n");
         exit(EXIT_FAILURE);

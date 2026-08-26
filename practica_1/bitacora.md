@@ -3,6 +3,7 @@
 ## Integrantes
 
 - Juan Jose Rodriguez Prada <juanrodriguezkq@unicauca.edu.co>
+- Sebastian Tintinago Pantoja <sebastiantintinago@unicauca.edu.co>
 
 ## Documentacion de la solucion
 
@@ -45,6 +46,11 @@ NAME
 
 DESCRIPTION
        getpid()  returns the process ID (PID) of the calling process.
+...
+
+ERRORS
+       These functions are always successful.
+
 ```
 ```bash
 ...
@@ -58,11 +64,18 @@ LIBRARY
 
 DESCRIPTION
        getpid()  returns the process ID (PID) of the calling process.
+...
+
+ERRORS
+       These functions are always successful.
+
 ```
 
-De esta manera se confirmo que efectivamente estos dos metodos que pertenecen a la libreria **<unistd.h>** permiten obtener el id del proceso y de su proceso padre.
+De esta manera se confirmo que efectivamente estos dos metodos que pertenecen a la libreria `<unistd.h>` permiten obtener el id del proceso y de su proceso padre.
 
-Continuando, se solicito que se escribiera un mensaje por salida estandar usando **write** y no **printf** como se haria generalmente. Ademas, se exigio que se comprobara la validez de esta operacion manejando una salida de error si algo salia mal.
+En la informacion sobre errores de estos dos metodos, se puede ver que ambas operaciones siempre son exitosas, asi que no fue necesario capturar errores.
+
+Continuando, se solicito que se escribiera un mensaje por salida estandar usando `write` y no `printf` como se haria generalmente. Ademas, se exigio que se comprobara la validez de esta operacion manejando una salida de error si algo salia mal.
 
 En primer lugar se accedio a la entrada de write en las llamadas al sistema.
 
@@ -91,27 +104,28 @@ RETURN VALUE
        On  success,  the  number of bytes written is returned.  On error, -1 is returned, and errno is set to indicate the error.
 ```
 
-Esto indica que el funcionamiento del write es muy diferente al de printf. Primero, se solicita un parametro entero *fd* del cual no se tenia conocimiento. En la documentacion se menciona que hace referencia a un *file descriptor*.
+Esto indica que el funcionamiento del write es muy diferente al de printf. Primero, se solicita un parametro entero `fd` del cual no se tenia conocimiento. En la documentacion se menciona que hace referencia a un `file descriptor`.
 
 Buscando ayuda se accedio a la entrada del manual de la salida estandar.
 
 ```bash
 man stdout
 ```
-Donde se encontro una referencia a los *file descriptors*
+Donde se encontro una referencia a los `file descriptors`
 
 ```bash
 the  integer file descriptors associated with the streams stdin, stdout, and stderr are 0, 1, and  2,  respectively.   The preprocessor  symbols STDIN_FILENO, STDOUT_FILENO, and STDERR_FILENO are defined with these values in <unistd.h>.
 ```
 
-Teniendo en cuenta esta informacion, se selecciono como la opcion candidato a **STDOUT_FILENO** para ser el valor de *fd* en la escritura con *write*, ya que hace referencia a la salida estandar.
+Teniendo en cuenta esta informacion, se selecciono como la opcion candidato a **STDOUT_FILENO** para ser el valor de `fd` en la escritura con **write**, ya que hace referencia a la salida estandar.
 
-Los parametros restantes fueron *buff* y *count*, donde *buff* es el mensaje que se definio como un arreglo de caracteres de longitud 50 y *count* seria la cantidad de caracteres diferentes al caracter nulo que esten dentro del arreglo.
+Los parametros restantes fueron `buff` y `count`, donde **buff** es el mensaje que se definio como un arreglo de caracteres y **count** seria la cantidad de bytes del mensaje a escribir.
 
-El manejo de un posible error al usar *write* se logro de manera sencilla aprovechando el valor de retorno cuando sucede algun problema.
+El manejo de un posible error al usar `write` se logro de manera sencilla aprovechando el valor de retorno cuando sucede algun problema.
 
 ```c
-if(write(STDOUT_FILENO, mensaje,  strlen(mensaje)) == -1) 
+//  write retorna -1 si la operacion falla
+if(write(STDOUT_FILENO, mensaje,  sizeof(mensaje)) == -1) 
     { 
         perror("Ocurrio un error al usar la funcion WRITE.\n");
         exit(EXIT_FAILURE);
@@ -121,3 +135,10 @@ if(write(STDOUT_FILENO, mensaje,  strlen(mensaje)) == -1)
 
 ### Programa 2
 
+Programa 2
+
+Se implementó un programa en C que imprime el mismo texto utilizando primero `printf` y luego `write`, sin incluir saltos de línea ni usar `fflush`.
+
+Al ejecutar el programa, se observa que el mensaje generado por `write` aparece primero en la terminal, seguido por el mensaje de `printf` una vez que el programa finaliza.
+
+La funcion `write` es una llamada al sistema que transfiere los datos al bufer del kernel, el cual se envia de inmediato al dispositivo de salida. A su vez, `printf` es una funcion de la biblioteca estandar de C que almacena los datos en un bufer en el espacio de usuario. Al no incluir un salto de línea (`\n`) ni forzar el vaciado con `fflush`, el texto de `printf` permanece en el bufer de usuario. Al terminar la ejecución del programa, el entorno de ejecución de C vacia automáticamente los buferes de usuario, causando que el texto de `printf` se muestre en pantalla después del texto de `write`.
