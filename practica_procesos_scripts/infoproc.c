@@ -1,6 +1,6 @@
 /**
  * @file 
- * @brief 
+ * @brief Parse and display specific process status fields from /proc
  * @author Juan Jose Rodriguez Prada <juanrodriguezkq@unicauca.edu.co>
  */
 
@@ -10,65 +10,69 @@
 #include <string.h>
 #include <unistd.h>
 
-int info_proc(char *ruta);
-void separar_cadena(char *cadena, char *separador, char **arr);
+#define MAX_PATH 512
+#define MAX_BUF 4096
 
-#define MAX 1024
+int info_proc(const char *ruta);
 
-int main(int argc, char * argv[argc])
+int main(int argc, char *argv[])
 {
-    char ruta[] = "/proc/";
-    char self[] = "self";
-    char aux[] = "/status";
-    strcat(ruta,(argc > 1 ? argv[1] : self ));
-    strcat(ruta, aux);
+    char ruta[MAX_PATH];
+    const char *pid = (argc > 1) ? argv[1] : "self";
 
-    int resultado = info_proc(ruta);
+    snprintf(ruta, sizeof(ruta), "/proc/%s/status", pid);
 
-    return resultado;
+    return info_proc(ruta);
 }
 
-int info_proc(char *ruta)
+int info_proc(const char *ruta)
 {
     int fd = open(ruta, O_RDONLY);
-
-    if(fd < 0)
+    if (fd < 0)
     {
-        perror("Ocurrio un error al abrir el archivo del proceso");
-        printf("%s\n", ruta);
-        close(fd);
+        perror("Error al abrir el archivo del proceso");
         return -1;
     }
 
-    char buffer[MAX];    
-    ssize_t bytes = read(fd, buffer, MAX-1);
-
-    if(bytes>0) buffer[bytes] = '\0';
-
-    char *lineas[MAX];
-    separar_cadena(buffer, "\n", lineas);
-    
-    printf("INFORMACION DEL PROCESO [%s]\n", ruta);
-    printf("%s\n", lineas[0]);
-    printf("%s\n", lineas[2]);
-    printf("%s\n", lineas[5]);
-    printf("%s\n", lineas[6]);
-    printf("%s\n", lineas[36]);
-
+    char buffer[MAX_BUF];
+    ssize_t bytes = read(fd, buffer, sizeof(buffer) - 1);
     close(fd);
-}
 
-void separar_cadena(char *cadena, char *separador, char **arr)
-{
-    char *subcadena = strtok(cadena, separador); 
-    int i = 0;
-    
-    while (subcadena != NULL) 
+    if (bytes < 0)
     {
-        arr[i] = subcadena;   
-        subcadena = strtok(NULL, separador); 
-        i++;
+        perror("Error al leer el archivo");
+        return -1;
     }
 
-    arr[i] = NULL;
+    buffer[bytes] = '\0';
+
+    const char *keys[] = {
+        "Name:",
+        "State:",
+        "Pid:",
+        "PPid:",
+        "Threads:"
+    };
+    size_t num_keys = sizeof(keys) / sizeof(keys[0]);
+
+    printf("INFORMACION DEL PROCESO [%s]\n", ruta);
+
+    for (size_t i = 0; i < num_keys; i++)
+    {
+        char *pos = strstr(buffer, keys[i]);
+        if (pos != NULL)
+        {
+            char *end = strchr(pos, '\n');
+            if (end != NULL)
+            {
+                printf("%.*s\n", (int)(end - pos), pos);
+            }
+            else
+            {
+                printf("%s\n", pos);
+            }
+        }
+    }
+
+    return 0;
 }
