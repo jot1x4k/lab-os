@@ -21,8 +21,6 @@ if [ ! -d "$dir" ]; then
     exit 1
 fi
 
-# TODO: Revisar explicacion
-
 while [ "$pid" -ne 0 ]; do
     ppid=$(awk '/^PPid:/ {print $2}' /proc/$pid/status)
     echo "Proceso [${pid}]"

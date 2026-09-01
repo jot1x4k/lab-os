@@ -1,6 +1,6 @@
 /**
  * @file 
- * @brief Parse and display specific process status fields from /proc
+ * @brief Obtener datos de un proceso mediante llamadas al sistema
  * @author Juan Jose Rodriguez Prada <juanrodriguezkq@unicauca.edu.co>
  */
 
@@ -25,6 +25,12 @@ int main(int argc, char *argv[])
     return info_proc(ruta);
 }
 
+/**
+ * @brief   Intenta leer el archivo correspondiente al proceso indicado, o a si mismo si no se paso ningun 
+ *          parametro. Despues, separa la informacion para crear un formato de informacion del proceso.
+ * @param   ruta direccion de ruta al archivo del proceso.
+ * @return  -1 si no se encontro el archivo del proceso o no se pudo leer, 0 si la operacion fue exitosa. 
+ */
 int info_proc(const char *ruta)
 {
     int fd = open(ruta, O_RDONLY);
