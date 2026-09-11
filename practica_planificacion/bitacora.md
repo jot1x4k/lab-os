@@ -76,11 +76,11 @@ A continuacion se calculo la tabla de tiempos.
 
 Tras evaluar las tablas de tiempos se obtuvieron los siguientes resultados:
 
-| **Algoritmo**            | **Tiempo de espera promedio (unidades de tiempo)** | **Tiempo de ejecucion promedio (unidades de tiempo)** |
-|:------------------------:|:--------------------------------------------------:|:-----------------------------------------------------:|
-| FIFO                     | 4,75                                               | 4                                                     |
-| SJF                      | 4                                                  | 4                                                     |
-| Roun Robin *(Quantum = 2)* | 5                                                  | 4                                                     |
+| **Algoritmo**            | **Tiempo de espera promedio (unidades de tiempo)** | **Tiempo de ejecucion promedio (unidades de tiempo)** | **Tiempo de retorno promedio (unidades de tiempo)** |
+|:------------------------:|:--------------------------------------------------:|:-----------------------------------------------------:|:---------------------------------------------------:|
+| FIFO                     | 4,75                                               | 4                                                     | 8,75                                                |
+| SJF                      | 4                                                  | 4                                                     | 8                                                   |
+| Roun Robin (Quantum = 2) | 5                                                  | 4                                                     | 9                                                   |
 
 
 Segun los resultados, el algoritmo de planificacion que ofrece un menor tiempo de espera frente a los demas es `SJF`, con un promedio de 4 unidades de tiempo.
@@ -126,15 +126,22 @@ Asi mismo, se realizo la tabla de tiempos:
 
 El resultado obtenido en el caso de Round Robin con `Quantum = 1` dio unos valores similares a los obtenidos en el caso donde el Quantum valia 2.
 
+| **Algoritmo**            | **Tiempo de espera promedio (unidades de tiempo)** | **Tiempo de ejecucion promedio (unidades de tiempo)** | **Tiempo de retorno promedio (unidades de tiempo)** |
+|:------------------------:|:--------------------------------------------------:|:-----------------------------------------------------:|:---------------------------------------------------:|
+| Roun Robin (Quantum = 1) | 5,5                                                | 4                                                     | 9,5                                                 |
+| Roun Robin (Quantum = 2) | 5                                                  | 4                                                     | 8,75                                                |
+
+
+Sin embargo, se pudo evidenciar que el decremento del Quantum afecto negativamente los resultados de tiempo para los mismos procesos.
+
 Tras analizar los resultados en el caso de Round Robin con `Quantum = 8`, se pudo verificar que coincide con los resultados del algoritmo `FIFO`.
 
-| **Algoritmo**            | **Tiempo de espera promedio (unidades de tiempo)** | **Tiempo de ejecucion promedio (unidades de tiempo)** |
-|:------------------------:|:--------------------------------------------------:|:-----------------------------------------------------:|
-| FIFO                     | 4,75                                               | 4                                                     |
-| Roun Robin (Quantum = 8) | 4,75                                               | 4                                                     |
+| **Algoritmo**            | **Tiempo de espera promedio (unidades de tiempo)** | **Tiempo de ejecucion promedio (unidades de tiempo)** | **Tiempo de retorno promedio (unidades de tiempo)** |
+|:------------------------:|:--------------------------------------------------:|:-----------------------------------------------------:|:---------------------------------------------------:|
+| FIFO                     | 4,75                                               | 4                                                     | 8,75                                                |
+| Roun Robin (Quantum = 8) | 4,75                                               | 4                                                     | 8,75                                                |
+
 
 Esto se debe a que cuando se tiene un algoritmo Round Robin con un valor de Quantum mayor al tiempo de ejecucion de **todos** los procesos, su comportamiento es identico al del algoritmo FIFO, esto debido a que ningun proceso agotara su Quantum y por lo tanto, se completara antes de que sea expropiado de la CPU.
 
-// TODO: 
-- Corregir tablas: falta el campo tiempo de retorno
-- Completar conclusion de resultados punto 4 de la guia
+## Parte 2
