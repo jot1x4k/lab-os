@@ -1,3 +1,5 @@
+#!/bin/bash
+
 pid=$1
 dir="/proc/${pid}"
 

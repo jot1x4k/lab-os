@@ -226,6 +226,7 @@ El shell funciona como un intermediario entre el usuario y el kernel del sistema
 Se comprobacion la instalacion de la herramienta de conversion ffmpeg:
 
 ![alt](resources/image8.png)
+![alt](resources/image11.png)
 
 A continuacion, se creo un script que convirtiera todos los archivos de un directorio con extension `.mkv` a `.mp4`, y que informe los resultados de las operaciones.
 
@@ -264,6 +265,8 @@ echo "Archivos saltados: $saltados"
 Finalmente se ejecuto el script dos veces seguidas sobre el mismo directorio para comprobar el funcionamiento.
 
 ![alt](resources/image9.png)
+
+![alt](resources/image10.png)
 
 
 
