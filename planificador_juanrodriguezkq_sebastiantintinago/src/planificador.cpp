@@ -222,11 +222,7 @@ Resultado planificar(std::vector<Proceso> &procesos, std::vector<Cola_prioridad>
                     cola.listos.push_front(actual);
                     break;
                 case Estrategia::RR:
-                    /**
-                     * \todo El proceso que agota su quantum vuelve al final de
-                     * la cola de listos.
-                     */
-                    cola.listos.push_back(actual); // Cambio para RR. Enviar de ultimo a la cola
+                    cola.listos.push_back(actual); // SOLUCION: para RR, enviar de ultimo a la cola
                     break;
                 case Estrategia::SJF:
                     /**
