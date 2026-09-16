@@ -229,7 +229,7 @@ Resultado planificar(std::vector<Proceso> &procesos, std::vector<Cola_prioridad>
                      * \todo SJF tampoco expropia, de modo que el proceso
                      * conserva la CPU hasta terminar.
                      */
-                    cola.listos.push_front(actual);
+                    //cola.listos.push_front(actual);
                     break;
                 case Estrategia::SRT:
                     /**
