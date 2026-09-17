@@ -26,6 +26,10 @@ std::string en_minusculas(std::string s) {
     return s;
 }
 
+[[maybe_unused]]bool comprar_tiempo_restante(Proceso *p1, Proceso *p2) {
+    return (p1->restante > p2->restante);
+}
+
 /**
  * @brief Inserta un proceso en una cola ordenada de forma ascendente por tiempo
  * restante. En caso de empate queda detras de los que ya estaban, de modo que el
@@ -43,6 +47,13 @@ std::string en_minusculas(std::string s) {
      * Mientras no este implementado, el proceso entra al final y SJF y SRT se
      * comportan como FIFO.
      */
+    // \SOLUCION: 
+    for(Proceso *proc : cola) {
+        if(proc->restante > p->restante) {
+            cola.push_front(p);
+            return;
+        }
+    }
     cola.push_back(p);
 }
 
@@ -137,7 +148,9 @@ int procesar_llegadas(int ahora, std::vector<Cola_prioridad> &colas) {
              * \todo En las colas SJF y SRT el proceso que llega se inserta
              * segun su rafaga, no al final. Usar insertar_por_restante().
              */
-            c.listos.push_back(p);
+            // \SOLUCION
+            
+            insertar_por_restante(c.listos, p);
             total++;
         }
     }
@@ -192,6 +205,9 @@ Resultado planificar(std::vector<Proceso> &procesos, std::vector<Cola_prioridad>
          *
          * Mientras no este implementado, SRT no expropia y se comporta como RR.
          */
+        if (cola.estrategia == Estrategia::SRT) {
+            
+        }
 
         if (traza) {
             std::cerr << "[" << ahora << "] cola " << (pos + 1) << " -> " << actual->nombre
@@ -229,14 +245,14 @@ Resultado planificar(std::vector<Proceso> &procesos, std::vector<Cola_prioridad>
                      * \todo SJF tampoco expropia, de modo que el proceso
                      * conserva la CPU hasta terminar.
                      */
-                    //cola.listos.push_front(actual);
+                    cola.listos.push_front(actual);
                     break;
                 case Estrategia::SRT:
                     /**
                      * \todo En SRT el proceso vuelve a la cola ordenado por su
                      * tiempo restante.
                      */
-                    cola.listos.push_front(actual);
+                    insertar_por_restante(cola.listos, actual);
                     break;
             }
         }

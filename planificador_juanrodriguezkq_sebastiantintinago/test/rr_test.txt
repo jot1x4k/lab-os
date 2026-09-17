@@ -1,6 +1,6 @@
 define queues 1
 define scheduling 1 rr
-define quantum 1 8
+define quantum 1 1
 process P1 0 7 1
 process P2 2 4 1
 process P3 4 1 1
